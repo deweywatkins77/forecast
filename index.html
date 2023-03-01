@@ -7,9 +7,25 @@
     </head>
     <body>
         <header>
+            <h1>Weather Forecast</h1>
         </header>
         <main>
-            
+            <section class="searchContainer" style="border: 2px solid black;">
+                <h2>Search For City:</h2>
+                <input type="text" id="searchValue">
+                <button id="searchBtn">Search</button>
+                <section class="savedCities" style="border-top: 2px solid green;"><p>test save</p></section>
+            </section>
+            <section class="forecastContainer">
+                <section id="dailyFore" style="border: spx solid aqua;">
+                    <h2 id="cityName">Test City Name</h2>
+                    <p>Temp</p>
+                    <p>Wind</p>
+                    <p>Humidity</p>
+                </section>
+                <section id="fiveFore" style="border: 2px solid pink;">
+                </section>
+            </section>
         </main>
         <script src="./assets/js/script.js"></script>
     </body>
