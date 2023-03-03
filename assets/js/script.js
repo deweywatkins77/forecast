@@ -77,7 +77,9 @@ async function getWeather(lat, lon){
 
 //function for building elements and displaying them.
 function buildForecast(current, forecast){
-    //current weather
+    //current weather, first clear out old data
+    let currentWeather = document.querySelector('.currentWeather')
+    currentWeather.innerHTML = ''
     let currentTemp = current.main.temp
     let currentWind = current.wind.speed
     let currentHumidity = current.main.humidity
@@ -92,22 +94,51 @@ function buildForecast(current, forecast){
     humidityEl.textContent = `Humidity: ${currentHumidity}%`
     let iconEl = document.createElement('img')
     iconEl.src = `http://openweathermap.org/img/wn/${current.weather[0].icon}@2x.png`
-    document.querySelector('#cityName').textContent = city + "  " + currentDate
-    let forecastContainer = document.querySelector('.currentWeather')
-    forecastContainer.appendChild(tempEl, windEl, iconEl, humidityEl)// + windEl + humidityEl + imgSource
-    forecastContainer.appendChild(windEl)
-    forecastContainer.appendChild(iconEl)
-    forecastContainer.appendChild(humidityEl)
+    let h2El = document.createElement('h2')
+    h2El.textContent = city + "  " + currentDate
+    currentWeather.appendChild(h2El)
+    currentWeather.appendChild(tempEl)
+    currentWeather.appendChild(windEl)
+    currentWeather.appendChild(iconEl)
+    currentWeather.appendChild(humidityEl)
 
-
-
-
-    let forecastTemp = forecast.list[0].main.temp
-    let forecastWind = forecast.list[0].wind.speed
-    let forecastHumidity = forecast.list[0].main.humidity
-    let forecastIcon = forecast.list[0].weather[0].icon
-    let forecastDate = forecast.list[0].dt_txt
-    console.log(forecastTemp, forecastWind, forecastHumidity, forecastIcon, forecastDate)
+    //five day forecast
+    let today = dayjs()
+    //createdate array for the five days
+    let forecastDays = []
+    for (i=0; i<5; i++){
+        let nextday = today.add(i+1, 'day').set('hour', 15).set('minute', 00).set('second', 00)
+        forecastDays[i] = nextday.format('YYYY-MM-DD HH:mm:ss')
+    }
+    //clear out previous data
+    for (i=0; i<5; i++){
+        document.querySelector(`#day-${i}`).textContent = ""
+    }
+    //populate new data
+    forecast.list.forEach(function(forecastWeather){
+        //compare with forecast date and time, if not in array go to next array index
+        if(!forecastDays.includes(forecastWeather.dt_txt)){
+            return
+        }
+        console.log(forecastWeather)
+        forecastDiv = document.querySelector(`#day-${forecastDays.indexOf(forecastWeather.dt_txt)}`)
+        console.log(forecastDiv)
+        let forecastDateEl = document.createElement('h2')
+        forecastDateEl.textContent = dayjs(forecastWeather.dt_txt).format('MM/DD/YYYY')
+        let forecastImg = document.createElement('img')
+        forecastImg.src = `http://openweathermap.org/img/wn/${forecastWeather.weather[0].icon}@2x.png`
+        let forecastTempEl = document.createElement('p')
+        forecastTempEl.textContent = forecastWeather.main.temp
+        let forecastWindEl = document.createElement('p')
+        forecastWindEl.textContent = forecastWeather.wind.speed
+        let forecastHumidityEl = document.createElement('p')
+        forecastHumidityEl.textContent = forecastWeather.main.humidity
+        forecastDiv.appendChild(forecastDateEl)
+        forecastDiv.appendChild(forecastImg)
+        forecastDiv.appendChild(forecastTempEl)
+        forecastDiv.appendChild(forecastWindEl)
+        forecastDiv.appendChild(forecastHumidityEl)
+    })
 }
 
 populateCities()
