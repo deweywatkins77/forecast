@@ -72,18 +72,36 @@ async function getWeather(lat, lon){
     let currentData = await currentResponse.json()
     let forecastResponse = await fetch(forecastWeathURL)
     let forecastData = await forecastResponse.json()
-    console.log(currentData)
-    console.log(forecastData)
     buildForecast(currentData, forecastData)
 }
 
 //function for building elements and displaying them.
 function buildForecast(current, forecast){
+    //current weather
     let currentTemp = current.main.temp
     let currentWind = current.wind.speed
     let currentHumidity = current.main.humidity
     let currentIcon = current.weather[0].icon
-    console.log(currentTemp, currentWind, currentHumidity, currentIcon)
+    let city = current.name
+    let currentDate = dayjs(current.dt * 1000).format('MM/DD/YYYY')
+    let tempEl = document.createElement('p')
+    tempEl.textContent = `Temp: ${Math.floor(currentTemp)}°F`
+    let windEl = document.createElement('p')
+    windEl.textContent = `Wind Speed: ${currentWind} MPH`
+    let humidityEl = document.createElement('p')
+    humidityEl.textContent = `Humidity: ${currentHumidity}%`
+    let iconEl = document.createElement('img')
+    iconEl.src = `http://openweathermap.org/img/wn/${current.weather[0].icon}@2x.png`
+    document.querySelector('#cityName').textContent = city + "  " + currentDate
+    let forecastContainer = document.querySelector('.currentWeather')
+    forecastContainer.appendChild(tempEl, windEl, iconEl, humidityEl)// + windEl + humidityEl + imgSource
+    forecastContainer.appendChild(windEl)
+    forecastContainer.appendChild(iconEl)
+    forecastContainer.appendChild(humidityEl)
+
+
+
+
     let forecastTemp = forecast.list[0].main.temp
     let forecastWind = forecast.list[0].wind.speed
     let forecastHumidity = forecast.list[0].main.humidity
