@@ -1,16 +1,3 @@
-// current weather = https://api.openweathermap.org/data/2.5/weather?appid=c4bc6124ae143bb4ad40a5546c016dd6&units=imperial&q=Atlanta,Ga,1
-// forecast = https://api.openweathermap.org/data/2.5/forecast?appid=c4bc6124ae143bb4ad40a5546c016dd6&units=imperial&q=woodstock,GA,1&cnt=20
-// 
-//geo =http://api.openweathermap.org/geo/1.0/direct?q=canton,ga,1&appid=c4bc6124ae143bb4ad40a5546c016dd6
-//fetch(url)
-//     .then(function (response) {
-//         console.log(response)
-//         return response.json()
-//     })
-//     .then (function (data){
-//         console.log(data)
-//     })
-
 const forecastURL = "https://api.openweathermap.org/data/2.5/forecast?appid=c4bc6124ae143bb4ad40a5546c016dd6&units=imperial&cnt=40"
 const currentURL = "https://api.openweathermap.org/data/2.5/weather?appid=c4bc6124ae143bb4ad40a5546c016dd6&units=imperial"
 const geoURL = "http://api.openweathermap.org/geo/1.0/direct?appid=c4bc6124ae143bb4ad40a5546c016dd6"
@@ -50,8 +37,10 @@ submitEl.addEventListener("click", async function(event){
 function populateCities(){
     cityListEl.replaceChildren()
     Object.keys(savedCities).forEach((element)=>{
-        var cityListItem = document.createElement("p")
+        var cityListItem = document.createElement("li")
         cityListItem.textContent = savedCities[element].City + ", " + savedCities[element].State
+        cityListItem.dataset.city = savedCities[element].City
+        cityListItem.dataset.state = savedCities[element].State
         cityListEl.appendChild(cityListItem)
     })
 }
@@ -79,7 +68,7 @@ async function getWeather(lat, lon){
 function buildForecast(current, forecast){
     //current weather, first clear out old data
     let currentWeather = document.querySelector('.currentWeather')
-    currentWeather.innerHTML = ''
+    currentWeather.replaceChildren()
     let currentTemp = current.main.temp
     let currentWind = current.wind.speed
     let currentHumidity = current.main.humidity
@@ -97,9 +86,9 @@ function buildForecast(current, forecast){
     let h2El = document.createElement('h2')
     h2El.textContent = city + "  " + currentDate
     currentWeather.appendChild(h2El)
+    currentWeather.appendChild(iconEl)
     currentWeather.appendChild(tempEl)
     currentWeather.appendChild(windEl)
-    currentWeather.appendChild(iconEl)
     currentWeather.appendChild(humidityEl)
 
     //five day forecast
@@ -112,7 +101,7 @@ function buildForecast(current, forecast){
     }
     //clear out previous data
     for (i=0; i<5; i++){
-        document.querySelector(`#day-${i}`).textContent = ""
+        document.querySelector(`#day-${i}`).replaceChildren()
     }
     //populate new data
     forecast.list.forEach(function(forecastWeather){
@@ -120,19 +109,17 @@ function buildForecast(current, forecast){
         if(!forecastDays.includes(forecastWeather.dt_txt)){
             return
         }
-        console.log(forecastWeather)
         forecastDiv = document.querySelector(`#day-${forecastDays.indexOf(forecastWeather.dt_txt)}`)
-        console.log(forecastDiv)
         let forecastDateEl = document.createElement('h2')
         forecastDateEl.textContent = dayjs(forecastWeather.dt_txt).format('MM/DD/YYYY')
         let forecastImg = document.createElement('img')
         forecastImg.src = `http://openweathermap.org/img/wn/${forecastWeather.weather[0].icon}@2x.png`
         let forecastTempEl = document.createElement('p')
-        forecastTempEl.textContent = forecastWeather.main.temp
+        forecastTempEl.textContent = `Temp: ${forecastWeather.main.temp}°F`
         let forecastWindEl = document.createElement('p')
-        forecastWindEl.textContent = forecastWeather.wind.speed
+        forecastWindEl.textContent = `Wind: ${forecastWeather.wind.speed} MPH`
         let forecastHumidityEl = document.createElement('p')
-        forecastHumidityEl.textContent = forecastWeather.main.humidity
+        forecastHumidityEl.textContent = `Humidity: ${forecastWeather.main.humidity}%`
         forecastDiv.appendChild(forecastDateEl)
         forecastDiv.appendChild(forecastImg)
         forecastDiv.appendChild(forecastTempEl)
@@ -140,5 +127,17 @@ function buildForecast(current, forecast){
         forecastDiv.appendChild(forecastHumidityEl)
     })
 }
+
+//function for citylist event listner
+cityListEl.addEventListener('click', async function(event){
+    let clickedEl = event.target
+    let clickedResults = await getCoord(clickedEl.dataset.city, clickedEl.dataset.state)
+    //if results returned continue, if not prompt user to try again
+    if (clickedResults.length > 0){
+        getWeather(clickedResults[0].lat, clickedResults[0].lon)
+    }else{
+        window.alert("That location could not be found. Please try again.")
+    }
+})
 
 populateCities()

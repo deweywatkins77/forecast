@@ -10,19 +10,23 @@
             <h1>Weather Forecast</h1>
         </header>
         <main>
-            <section class="searchContainer" style="border: 2px solid black;">
+            <section class="searchContainer">
                 <h2>Search For City:</h2>
                 <input type="text" id="searchValue" placeholder="City, State">
                 <input type="submit" id="searchBtn" value="Search">
-                <section class="cityList" style="border-top: 2px solid green;"></section>
+                <section class="cityContainer">
+                    <ul class="cityList"></ul>
+                </section>
             </section>
-            <section class="currentWeather"></section>
-            <section class="forecast" style="border: 2px solid pink;">
-                <div id="day-0"></div>
-                <div id="day-1"></div>
-                <div id="day-2"></div>
-                <div id="day-3"></div>
-                <div id="day-4"></div>
+            <section class="weatherContainer">
+                <section class="currentWeather"></section>
+                <section class="forecastContainer">
+                    <div id="day-0"></div>
+                    <div id="day-1"></div>
+                    <div id="day-2"></div>
+                    <div id="day-3"></div>
+                    <div id="day-4"></div>
+                </section>
             </section>
         </main>
         <script src="./assets/js/script.js"></script>
