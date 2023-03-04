@@ -1,6 +1,6 @@
 const forecastURL = "https://api.openweathermap.org/data/2.5/forecast?appid=c4bc6124ae143bb4ad40a5546c016dd6&units=imperial&cnt=40"
 const currentURL = "https://api.openweathermap.org/data/2.5/weather?appid=c4bc6124ae143bb4ad40a5546c016dd6&units=imperial"
-const geoURL = "http://api.openweathermap.org/geo/1.0/direct?appid=c4bc6124ae143bb4ad40a5546c016dd6"
+const geoURL = "https://api.openweathermap.org/geo/1.0/direct?appid=c4bc6124ae143bb4ad40a5546c016dd6"
 const submitEl = document.querySelector('#searchBtn')
 const cityListEl = document.querySelector('.cityList')
 var savedCities = JSON.parse(localStorage.getItem("cityCache"))
