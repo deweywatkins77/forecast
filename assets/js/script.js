@@ -86,7 +86,7 @@ function buildForecast(current, forecast){
     let humidityEl = document.createElement('p')
     humidityEl.textContent = `Humidity: ${currentHumidity}%`
     let iconEl = document.createElement('img')
-    iconEl.src = `http://openweathermap.org/img/wn/${current.weather[0].icon}@2x.png`
+    iconEl.src = `https://openweathermap.org/img/wn/${current.weather[0].icon}@2x.png`
     let h2El = document.createElement('h2')
     h2El.textContent = city + "  " + currentDate
     currentWeather.appendChild(h2El)
@@ -117,7 +117,7 @@ function buildForecast(current, forecast){
         let forecastDateEl = document.createElement('h2')
         forecastDateEl.textContent = dayjs(forecastWeather.dt_txt).format('MM/DD/YYYY')
         let forecastImg = document.createElement('img')
-        forecastImg.src = `http://openweathermap.org/img/wn/${forecastWeather.weather[0].icon}@2x.png`
+        forecastImg.src = `https://openweathermap.org/img/wn/${forecastWeather.weather[0].icon}@2x.png`
         let forecastTempEl = document.createElement('p')
         forecastTempEl.textContent = `Temp: ${Math.floor(forecastWeather.main.temp)}°F`
         let forecastWindEl = document.createElement('p')
