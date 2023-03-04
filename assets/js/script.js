@@ -41,6 +41,10 @@ function populateCities(){
         cityListItem.textContent = savedCities[element].City + ", " + savedCities[element].State
         cityListItem.dataset.city = savedCities[element].City
         cityListItem.dataset.state = savedCities[element].State
+        var delEl = document.createElement('button')
+        delEl.textContent = 'X'
+        delEl.dataset.citystate = savedCities[element].City + ", " + savedCities[element].State
+        cityListItem.appendChild(delEl)
         cityListEl.appendChild(cityListItem)
     })
 }
@@ -64,7 +68,7 @@ async function getWeather(lat, lon){
     buildForecast(currentData, forecastData)
 }
 
-//function for building elements and displaying them.
+//function for building forecasts and displaying them.
 function buildForecast(current, forecast){
     //current weather, first clear out old data
     let currentWeather = document.querySelector('.currentWeather')
@@ -78,7 +82,7 @@ function buildForecast(current, forecast){
     let tempEl = document.createElement('p')
     tempEl.textContent = `Temp: ${Math.floor(currentTemp)}°F`
     let windEl = document.createElement('p')
-    windEl.textContent = `Wind Speed: ${currentWind} MPH`
+    windEl.textContent = `Wind Speed: ${Math.floor(currentWind)} MPH`
     let humidityEl = document.createElement('p')
     humidityEl.textContent = `Humidity: ${currentHumidity}%`
     let iconEl = document.createElement('img')
@@ -115,9 +119,9 @@ function buildForecast(current, forecast){
         let forecastImg = document.createElement('img')
         forecastImg.src = `http://openweathermap.org/img/wn/${forecastWeather.weather[0].icon}@2x.png`
         let forecastTempEl = document.createElement('p')
-        forecastTempEl.textContent = `Temp: ${forecastWeather.main.temp}°F`
+        forecastTempEl.textContent = `Temp: ${Math.floor(forecastWeather.main.temp)}°F`
         let forecastWindEl = document.createElement('p')
-        forecastWindEl.textContent = `Wind: ${forecastWeather.wind.speed} MPH`
+        forecastWindEl.textContent = `Wind: ${Math.floor(forecastWeather.wind.speed)} MPH`
         let forecastHumidityEl = document.createElement('p')
         forecastHumidityEl.textContent = `Humidity: ${forecastWeather.main.humidity}%`
         forecastDiv.appendChild(forecastDateEl)
@@ -131,6 +135,12 @@ function buildForecast(current, forecast){
 //function for citylist event listner
 cityListEl.addEventListener('click', async function(event){
     let clickedEl = event.target
+    if (clickedEl.tagName.toLowerCase() == 'button'){
+        delete savedCities[clickedEl.dataset.citystate]
+        localStorage.setItem("cityCache", JSON.stringify(savedCities))
+        populateCities()
+        return
+    }
     let clickedResults = await getCoord(clickedEl.dataset.city, clickedEl.dataset.state)
     //if results returned continue, if not prompt user to try again
     if (clickedResults.length > 0){
