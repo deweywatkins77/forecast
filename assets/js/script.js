@@ -12,14 +12,14 @@ if (!savedCities){savedCities={}}
 submitEl.addEventListener("click", async function(event){
     event.preventDefault()
     //check for incorrect city state format
-    var Name = document.querySelector('#searchValue').value
+    var Name = document.querySelector('#searchValue').value.toLowerCase()
     if (!Name.includes(",")){
         window.alert('Please use "City, State" format')
         return
     }
     var locName={}
-    locName.City = document.querySelector('#searchValue').value.split(',')[0].trim()
-    locName.State = document.querySelector('#searchValue').value.split(',')[1].trim()
+    locName.City = document.querySelector('#searchValue').value.split(',')[0].trim().toLowerCase()
+    locName.State = document.querySelector('#searchValue').value.split(',')[1].trim().toLowerCase()
     var results = await getCoord(locName.City, locName.State)
     //if results returned continue, if not prompt user to try again
     if (results.length > 0){
