@@ -76,7 +76,6 @@ function buildForecast(current, forecast){
     let currentTemp = current.main.temp
     let currentWind = current.wind.speed
     let currentHumidity = current.main.humidity
-    let currentIcon = current.weather[0].icon
     let city = current.name
     let currentDate = dayjs(current.dt * 1000).format('MM/DD/YYYY')
     let tempEl = document.createElement('p')
